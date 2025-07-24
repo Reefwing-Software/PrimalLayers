@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #include "Brainstem.h"
+#include <math.h>    // for abs()
 
 void Brainstem::begin(NervousSystem* nervousSystem,
                       ReflexController* reflexController,
@@ -40,7 +41,7 @@ void Brainstem::monitorBattery(float volts) {
 }
 
 void Brainstem::monitorTilt(float degrees) {
-    if (abs(degrees) > 20.0) {
+    if (fabs(degrees) > 20.0) {
         ns->sendSignal({ TILT_EXCEEDED, degrees });
     }
 }

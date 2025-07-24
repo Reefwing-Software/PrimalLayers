@@ -11,9 +11,11 @@ void ReflexController::begin(AlertnessController* alertController) {
 
 bool ReflexController::isReflex(const Signal& s) const {
     switch (s.type) {
-        case TEMP_HIGH:
-        case BATTERY_LOW:
         case TILT_EXCEEDED:
+        case OBSTACLE_DETECTED:
+        case EDGE_DETECTED:
+        case NOISE_HIGH:
+        case LIGHT_HIGH:
             return true;
         default:
             return false;
@@ -22,43 +24,57 @@ bool ReflexController::isReflex(const Signal& s) const {
 
 void ReflexController::execute(const Signal& s) const {
     switch (s.type) {
-        case TEMP_HIGH:
-            handleTempHigh(s.value);
-            break;
-        case BATTERY_LOW:
-            handleBatteryLow(s.value);
-            break;
         case TILT_EXCEEDED:
             handleTiltExceeded(s.value);
+            break;
+        case OBSTACLE_DETECTED:
+            handleObstacleDetected(s.value);
+            break;
+        case EDGE_DETECTED:
+            handleEdgeDetected(s.value);
+            break;
+        case NOISE_HIGH:
+            handleLoudNoise(s.value);
+            break;
+        case LIGHT_HIGH:
+            handleBrightLight(s.value);
             break;
         default:
             break;
     }
 }
 
-void ReflexController::handleTempHigh(float value) const {
-    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
-        // Trigger active cooling or limit performance
-        // Example: fanController.setSpeed(HIGH);
-    } else {
-        // Reflex suppressed due to low alertness
-    }
-}
-
-void ReflexController::handleBatteryLow(float value) const {
-    if (alertness && alertness->getAlertLevel() == ALERT_HIGH) {
-        // Immediate aggressive power shedding
-        // Example: powerManager.enterEmergencyMode();
-    } else {
-        // Standard power-saving response or defer to autonomic
-    }
-}
-
 void ReflexController::handleTiltExceeded(float value) const {
     if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
-        // Stop motors, rebalance
-        // Example: motorController.stop();
-    } else {
-        // Reflex ignored or delayed due to inattentive state
+        // Example: immediately stop motors to prevent falling
+        // motorController.stop();
+    }
+}
+
+void ReflexController::handleObstacleDetected(float distance) const {
+    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+        // Example: back up or stop immediately
+        // motorController.reverse();
+    }
+}
+
+void ReflexController::handleEdgeDetected(float position) const {
+    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+        // Example: prevent fall by halting forward motion
+        // motorController.halt();
+    }
+}
+
+void ReflexController::handleLoudNoise(float decibels) const {
+    if (alertness && alertness->getAlertLevel() == ALERT_HIGH) {
+        // Example: enter alert posture or look toward sound
+        // postureController.raiseHead();
+    }
+}
+
+void ReflexController::handleBrightLight(float lux) const {
+    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+        // Example: close protective shutters or shield sensors
+        // visionController.dimExposure();
     }
 }

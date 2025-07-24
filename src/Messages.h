@@ -8,6 +8,10 @@
 enum SignalType {
     TEMP_HIGH,
     BATTERY_LOW,
+    OBSTACLE_DETECTED,
+    EDGE_DETECTED,
+    NOISE_HIGH,
+    LIGHT_HIGH,
     TILT_EXCEEDED,
     HEARTBEAT,
     STATE

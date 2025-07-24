@@ -17,7 +17,9 @@ public:
 private:
     AlertnessController* alertness = nullptr;
 
-    void handleTempHigh(float value) const;
-    void handleBatteryLow(float value) const;
     void handleTiltExceeded(float value) const;
+    void handleObstacleDetected(float distance) const;
+    void handleEdgeDetected(float position) const;
+    void handleLoudNoise(float decibels) const;
+    void handleBrightLight(float lux) const;
 };
