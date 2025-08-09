@@ -5,15 +5,34 @@
 
 #include "PrimalLayers.h"
 
-void PrimalLayers::begin() {
+void PrimalLayers::begin(HardwareInterface* hw) {
     nervousSystem.begin();
     autonomicController.begin();
-    alertnessController.begin();
-    reflexController.begin(&alertnessController);
+   
+    hardwareInterface = hw;
 
-    brainstem.begin(&nervousSystem, &reflexController, &autonomicController);
+    // Pass in hardware interface
+    brainstem.begin(
+        &nervousSystem,
+        &reflexController,
+        &autonomicController,
+        hardwareInterface
+    );
+    
+    alertnessController.begin(hardwareInterface);
+    reflexController.begin(&alertnessController);
 }
 
 void PrimalLayers::update() {
     brainstem.update();
+    // Future: add Control and Cognitive layers here
+}
+
+// Wrapper method for Brainstem state management
+void PrimalLayers::setState(RobotState state) {
+    brainstem.setState(state);
+}
+
+void PrimalLayers::setAlertScore(int score) {
+    alertnessController.setAlertScore(score);
 }

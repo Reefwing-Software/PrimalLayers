@@ -11,6 +11,7 @@
 class ReflexController {
 public:
     void begin(AlertnessController* alertController);
+    void update();
     bool isReflex(const Signal& s) const;
     void execute(const Signal& s) const;
 

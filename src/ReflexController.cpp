@@ -9,6 +9,12 @@ void ReflexController::begin(AlertnessController* alertController) {
     alertness = alertController;
 }
 
+void ReflexController::update() {
+    if (alertness) {
+        alertness->update();
+    }
+}
+
 bool ReflexController::isReflex(const Signal& s) const {
     switch (s.type) {
         case TILT_EXCEEDED:
@@ -45,35 +51,35 @@ void ReflexController::execute(const Signal& s) const {
 }
 
 void ReflexController::handleTiltExceeded(float value) const {
-    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+    if (alertness && alertness->getLevel() != ALERT_LOW) {
         // Example: immediately stop motors to prevent falling
         // motorController.stop();
     }
 }
 
 void ReflexController::handleObstacleDetected(float distance) const {
-    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+    if (alertness && alertness->getLevel() != ALERT_LOW) {
         // Example: back up or stop immediately
         // motorController.reverse();
     }
 }
 
 void ReflexController::handleEdgeDetected(float position) const {
-    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+    if (alertness && alertness->getLevel() != ALERT_LOW) {
         // Example: prevent fall by halting forward motion
         // motorController.halt();
     }
 }
 
 void ReflexController::handleLoudNoise(float decibels) const {
-    if (alertness && alertness->getAlertLevel() == ALERT_HIGH) {
+    if (alertness && alertness->getLevel() == ALERT_HIGH) {
         // Example: enter alert posture or look toward sound
         // postureController.raiseHead();
     }
 }
 
 void ReflexController::handleBrightLight(float lux) const {
-    if (alertness && alertness->getAlertLevel() != ALERT_LOW) {
+    if (alertness && alertness->getLevel() != ALERT_LOW) {
         // Example: close protective shutters or shield sensors
         // visionController.dimExposure();
     }
